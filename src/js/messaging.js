@@ -31,7 +31,7 @@ function locationError(err) {
 function locationSuccess(pos) {
   // Construct URL
   var url = 'https://query.yahooapis.com/v1/public/yql?q=' +
-      encodeURIComponent('select item.condition, item.forecast from weather.forecast where woeid in (select woeid from geo.placefinder(1) where text="' +
+      encodeURIComponent('select item.condition, item.forecast, astronomy.sunset, astronomy.sunrise from weather.forecast where woeid in (select woeid from geo.placefinder(1) where text="' +
       pos.coords.latitude + ',' + pos.coords.longitude +  '" and gflags="R") and u="c" limit 1') + '&format=json';
 
   console.log(url);
@@ -58,7 +58,7 @@ function getWeather() {
 
     if(weatherLoc) {
       var url = 'https://query.yahooapis.com/v1/public/yql?q=' +
-          encodeURIComponent('select item.condition, item.forecast from weather.forecast where woeid in (select woeid from geo.places(1) where text="' +
+          encodeURIComponent('select item.condition, item.forecast, astronomy.sunset, astronomy.sunrise from weather.forecast where woeid in (select woeid from geo.places(1) where text="' +
           weatherLoc + '") and u="c" limit 1') + '&format=json';
       console.log(url);
 
@@ -73,10 +73,12 @@ function getWeather() {
 function getAndSendWeatherData(url) {
   xhrRequest(url, 'GET',
     function(responseText) {
-      // responseText contains a JSON object with weather info
+      // responseText contains a JSON object with weather and sun info
       var json = JSON.parse(responseText);
       var condition = json.query.results.channel.item.condition;
       var forecast = json.query.results.channel.item.forecast;
+      var sunrise  = json.query.results.channel.astronomy.sunrise;
+      var sunset  = json.query.results.channel.astronomy.sunset;
 
       if(json.query.count == "1") {
         // Temperature in Kelvin requires adjustment
@@ -92,6 +94,22 @@ function getAndSendWeatherData(url) {
         var forecastHighTemp = Math.round(forecast.high);
         var forecastLowTemp = Math.round(forecast.low);
 
+        // extract sunrise/sunset times
+        var sunriseElements = sunrise.split(/[ :]/);
+        var sunriseHour = parseInt(sunriseElements[0], 10);
+        var sunriseMinute = parseInt(sunriseElements[1], 10);
+        if(sunriseElements[2] == "pm"){
+          sunriseHour += 12;
+        }
+        var sunsetElements = sunset.split(/[ :]/);
+        var sunsetHour = parseInt(sunsetElements[0], 10);
+        var sunsetMinute = parseInt(sunsetElements[1], 10);
+        if(sunsetElements[2] == "pm"){
+          sunsetHour += 12;
+        }
+        console.log('sunrise time is ' + sunriseHour + ':' + sunriseMinute);
+        console.log('sunset time is ' + sunsetHour + ':' + sunsetMinute);
+        
 
         // night state is not used with yahoo weather
         var isNight = false;
