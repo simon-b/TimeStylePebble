@@ -41,7 +41,15 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
   Tuple *weatherForecastHigh_tuple = dict_find(iterator, KEY_FORECAST_TEMP_HIGH);
   Tuple *weatherForecastLow_tuple = dict_find(iterator, KEY_FORECAST_TEMP_LOW);
 
-  if(weatherTemp_tuple != NULL && weatherConditions_tuple != NULL && weatherIsNight_tuple != NULL) {
+  // sun info
+  Tuple *weatherSunriseHour_tuple = dict_find(iterator, KEY_SUNRISE_HOUR);
+  Tuple *weatherSunriseMinute_tuple = dict_find(iterator, KEY_SUNRISE_MINITE);
+  Tuple *weatherSunsetHour_tuple = dict_find(iterator, KEY_SUNSET_HOUR);
+  Tuple *weatherSunsetMinute_tuple = dict_find(iterator, KEY_SUNSET_MINUTE);
+  
+  if(weatherTemp_tuple != NULL && weatherConditions_tuple != NULL && weatherIsNight_tuple != NULL
+    && weatherSunriseHour_tuple != NULL && weatherSunriseMinute_tuple != NULL
+    && weatherSunsetHour_tuple != NULL && weatherSunsetMinute_tuple != NULL ) {
     bool isNight = (bool)weatherIsNight_tuple->value->int32;
 
     // now set the weather conditions properly
@@ -51,6 +59,12 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
 
     Weather_setConditions(weatherConditions_tuple->value->int32, isNight,
                           weatherForecastCondition_tuple->value->int32);
+    
+    // now set the sunrise and sunset times properly
+    Weather_sunTimes.riseHour = (int)weatherSunriseHour_tuple->value->int32;
+    Weather_sunTimes.riseMinute = (int)weatherSunriseMinute_tuple->value->int32;
+    Weather_sunTimes.setHour= (int)weatherSunsetHour_tuple->value->int32;
+    Weather_sunTimes.setMinute = (int)weatherSunsetMinute_tuple->value->int32;
 
     Weather_saveData();
   }

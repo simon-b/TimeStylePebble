@@ -27,6 +27,10 @@
 #define KEY_FORECAST_TEMP_LOW           27
 #define KEY_SETTING_ALTCLOCK_NAME       28
 #define KEY_SETTING_ALTCLOCK_OFFSET     29
+#define KEY_SUNRISE_HOUR                30
+#define KEY_SUNRISE_MINITE              31
+#define KEY_SUNSET_HOUR                 32
+#define KEY_SUNSET_MINUTE               33
 
 void messaging_requestNewWeatherData();
 

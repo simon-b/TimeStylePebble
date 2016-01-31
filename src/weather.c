@@ -3,6 +3,7 @@
 
 WeatherInfo Weather_weatherInfo;
 WeatherForecastInfo Weather_weatherForecast;
+WeatherSunTime Weather_sunTimes;
 
 #ifdef PBL_COLOR
   GDrawCommandImage* Weather_currentWeatherIcon;

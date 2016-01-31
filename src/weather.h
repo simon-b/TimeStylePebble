@@ -16,8 +16,17 @@ typedef struct {
   uint32_t forecastIconResourceID;
 } WeatherForecastInfo;
 
+typedef struct {
+  int riseHour;
+  int riseMinute;
+  int setHour;
+  int setMinute;
+} WeatherSunTime;
+
 extern WeatherInfo Weather_weatherInfo;
 extern WeatherForecastInfo Weather_weatherForecast;
+extern WeatherSunTime Weather_sunTimes;
+
 
 #ifdef PBL_COLOR
   extern GDrawCommandImage* Weather_currentWeatherIcon;
