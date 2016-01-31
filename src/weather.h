@@ -4,6 +4,7 @@
 // persistent storage
 #define WEATHERINFO_PERSIST_KEY 2
 #define WEATHERFORECAST_PERSIST_KEY 222
+#define WEATHERSUN_PERSIST_KEY 333
 
 typedef struct {
   int currentTemp;

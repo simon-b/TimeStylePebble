@@ -167,12 +167,29 @@ void Weather_init() {
     Weather_weatherForecast.highTemp = INT32_MIN;
     Weather_weatherForecast.lowTemp = INT32_MIN;
   }
+  if (persist_exists(WEATHERSUN_PERSIST_KEY)) {
+    printf("sun times key exists!");
+    WeatherSunTime w;
+    persist_read_data(WEATHERSUN_PERSIST_KEY, &w, sizeof(WeatherSunTime));
+
+    Weather_sunTimes = w;
+
+  } else {
+    printf("sunshine key does not exist!");
+
+    Weather_sunTimes.riseHour = INT32_MIN;
+    Weather_sunTimes.riseMinute = INT32_MIN;
+    Weather_sunTimes.setHour = INT32_MIN;
+    Weather_sunTimes.setMinute = INT32_MIN;
+
+  }
 }
 
 void Weather_saveData() {
   printf("saving data!");
   persist_write_data(WEATHERINFO_PERSIST_KEY, &Weather_weatherInfo, sizeof(WeatherInfo));
   persist_write_data(WEATHERFORECAST_PERSIST_KEY, &Weather_weatherForecast, sizeof(WeatherForecastInfo));
+  persist_write_data(WEATHERSUN_PERSIST_KEY, &Weather_sunTimes, sizeof(WeatherSunTime));
 }
 
 void Weather_deinit() {
