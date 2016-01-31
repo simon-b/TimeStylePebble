@@ -121,7 +121,11 @@ function getAndSendWeatherData(url) {
           'KEY_USE_NIGHT_ICON': isNight,
           'KEY_FORECAST_CONDITION': forecastCondition,
           'KEY_FORECAST_TEMP_HIGH': forecastHighTemp,
-          'KEY_FORECAST_TEMP_LOW': forecastLowTemp
+          'KEY_FORECAST_TEMP_LOW': forecastLowTemp,
+          'KEY_SUNRISE_HOUR': sunriseHour,
+          'KEY_SUNRISE_MINUTE': sunriseMinute,
+          'KEY_SUNSET_HOUR': sunsetHour,
+          'KEY_SUNSET_MINUTE': sunsetMinute
         };
 
         console.log(JSON.stringify(dictionary));
