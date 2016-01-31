@@ -35,6 +35,8 @@ char currentMonth[8];
 char currentWeekNum[8];
 char currentSecondsNum[8];
 char altClock[8];
+char sunCountdown[8];
+
 
 // the widgets
 SidebarWidget batteryMeterWidget;
@@ -161,12 +163,43 @@ void SidebarWidgets_updateTime(struct tm* timeInfo) {
   // set the seconds string
   strftime(currentSecondsNum, 4, ":%S", timeInfo);
 
-  // set the alternate time zone string
   int hour = timeInfo->tm_hour;
+  int minute = timeInfo->tm_min;
+  
+  // set the sunrise/sunset info, if it is valid
+  if(Weather_sunTimes.setMinute!=INT32_MIN){
 
+    int minsToRise = (Weather_sunTimes.riseHour - hour) * 60;
+    if (Weather_sunTimes.riseHour < hour){
+      minsToRise += 24*60;
+    }
+    minsToRise += Weather_sunTimes.riseMinute - minute;
+    int minsToSet = (Weather_sunTimes.setHour - hour) * 60;
+    if (Weather_sunTimes.setHour < hour){
+      minsToSet += 24*60;
+    }
+    minsToSet += Weather_sunTimes.setMinute - minute;
+    int minsToSun;
+    if (minsToRise < minsToSet){
+      minsToSun = minsToRise;
+    } else{
+      minsToSun = minsToSet;
+    }
+    APP_LOG(APP_LOG_LEVEL_INFO, "Minutes to sun: %d", minsToSun);
+    if (minsToSun >= 60){
+          snprintf(sunCountdown, sizeof(sunCountdown), "%dh", (int) roundf(minsToSun / 60.0f));
+    } else {
+        snprintf(sunCountdown, sizeof(sunCountdown), "%dm", minsToSun);
+    }
+  }else{
+    strncpy(sunCountdown, "...", sizeof(sunCountdown));
+  }
+  
+  
+  
+  // set the alternate time zone string
   // apply the configured offset value
   hour += globalSettings.altclockOffset;
-
   // format it
   if(clock_is_24h_style()) {
     hour = mod(hour, 24);
