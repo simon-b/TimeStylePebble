@@ -1,7 +1,7 @@
 var APP_VERSION = 4;
 // var BASE_CONFIG_URL = 'http://localhost:4000/';
 // var BASE_CONFIG_URL = 'http://192.168.1.105:4000/';
-var BASE_CONFIG_URL = 'http://http://www.shb.nz/TimeStylePebble/';
+var BASE_CONFIG_URL = 'http://www.shb.nz/TimeStylePebble/';
 
 var failureRetryAmount = 3;
 var currentFailures = 0;
